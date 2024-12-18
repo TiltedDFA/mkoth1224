@@ -153,7 +153,7 @@ class EloSystem:
         print("\nCurrent Elo Ratings and Stats:")
         print(header)
         print("-" * len(header))
-        for player, rating in sorted(self.players.items(), key=lambda x: x[0].lower()):  # Sort alphabetically
+        for player, rating in sorted(self.players.items(), key=lambda x: x[1], reverse=True):  # Sort alphabetically
             player_stats = stats[player]
             print(
                 f"{player:<20} {round(rating, 2):<10} {player_stats['games']:<6} "
