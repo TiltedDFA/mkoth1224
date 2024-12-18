@@ -2,6 +2,7 @@ import csv
 import json
 import math
 import os
+from collections import defaultdict
 from datetime import datetime
 
 
@@ -117,17 +118,52 @@ class EloSystem:
         else:
             print("No existing player data found. Starting fresh.")
 
+    def calculate_stats_from_history(self):
+        """Calculate wins, losses, draws, and total games for each player from match history."""
+        stats = defaultdict(lambda: {"games": 0, "wins": 0, "losses": 0, "draws": 0})
+
+        if os.path.exists(self.history_csv):
+            with open(self.history_csv, "r") as file:
+                reader = csv.DictReader(file)
+                for row in reader:
+                    player1, player2 = row["Player 1"], row["Player 2"]
+                    score1, score2 = float(row["Player 1 Score"]), float(row["Player 2 Score"])
+
+                    # Update total games
+                    stats[player1]["games"] += 1
+                    stats[player2]["games"] += 1
+
+                    # Update wins, losses, draws
+                    if score1 > score2:
+                        stats[player1]["wins"] += 1
+                        stats[player2]["losses"] += 1
+                    elif score2 > score1:
+                        stats[player2]["wins"] += 1
+                        stats[player1]["losses"] += 1
+                    else:
+                        stats[player1]["draws"] += 1
+                        stats[player2]["draws"] += 1
+        return stats
+
     def display_ratings(self):
-        """Display all player ratings."""
-        print("\nCurrent Elo Ratings:")
-        self.players = dict(sorted(self.players.items(), key=lambda kv: kv[1], reverse=True))
-        for idx, (player, rating) in enumerate(self.players.items()):
-            print(f"{idx+1}. {player}: {round(rating, 2)}")
+        """Display all player ratings and stats."""
+        stats = self.calculate_stats_from_history()
+        # print("\nCurrent Elo Ratings and Stats:")
+        header = f"{'Player':<20} {'Rating':<10} {'Games':<6} {'Wins':<5} {'Losses':<7}"
+        print("\nCurrent Elo Ratings and Stats:")
+        print(header)
+        print("-" * len(header))
+        for player, rating in sorted(self.players.items(), key=lambda x: x[0].lower()):  # Sort alphabetically
+            player_stats = stats[player]
+            print(
+                f"{player:<20} {round(rating, 2):<10} {player_stats['games']:<6} "
+                f"{player_stats['wins']:<5} {player_stats['losses']:<7}"
+            )
 
 def main():
     system = EloSystem()
     system.display_ratings()
-    print("Welcome to the Elo Rating System!")
+    print("\nWelcome to the Elo Rating System!")
     while True:
         # Input player names and scores
         player1 = input("\nEnter the name of Player 1: ").strip().lower()
@@ -143,7 +179,7 @@ def main():
         # Update ratings and record match history
         system.update_ratings(player1, player2, score1, score2)
 
-        # Display updated ratings
+        # Display updated ratings and stats
         system.display_ratings()
 
         # Save player data
