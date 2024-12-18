@@ -149,14 +149,14 @@ class EloSystem:
         """Display all player ratings and stats."""
         stats = self.calculate_stats_from_history()
         # print("\nCurrent Elo Ratings and Stats:")
-        header = f"{'Player':<20} {'Rating':<10} {'Games':<6} {'Wins':<5} {'Losses':<7}"
+        header = f"{'Ranking':<10}{'Player':<20} {'Rating':<10} {'Games':<6} {'Wins':<5} {'Losses':<7}"
         print("\nCurrent Elo Ratings and Stats:")
         print(header)
         print("-" * len(header))
-        for player, rating in sorted(self.players.items(), key=lambda x: x[1], reverse=True):  # Sort alphabetically
+        for idx, (player, rating) in enumerate(sorted(self.players.items(), key=lambda x: x[1], reverse=True)):  # Sort alphabetically
             player_stats = stats[player]
             print(
-                f"{player:<20} {round(rating, 2):<10} {player_stats['games']:<6} "
+                f"{idx + 1:<10}{player:<20} {round(rating, 2):<10} {player_stats['games']:<6} "
                 f"{player_stats['wins']:<5} {player_stats['losses']:<7}"
             )
 
