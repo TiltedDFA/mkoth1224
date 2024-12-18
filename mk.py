@@ -149,7 +149,7 @@ class EloSystem:
         """Display all player ratings and stats."""
         stats = self.calculate_stats_from_history()
         # print("\nCurrent Elo Ratings and Stats:")
-        header = f"{'Ranking':<10} {'Player':<20} {'Rating':<10} {'Win %':<12}{'Games':<6} {'Wins':<5} {'Losses':<7}"
+        header = f"{'Rank':<5} {'Player':<20} {'Rating':<10} {'Win %':<12}{'Games':<6} {'Wins':<5} {'Losses':<7}"
         print("\nCurrent Elo Ratings and Stats:")
         print(header)
         print("-" * len(header))
@@ -159,7 +159,7 @@ class EloSystem:
             wins = player_stats['wins']
             win_rate = (wins / games * 100) if games > 0 else 0.0
             print(
-                f"{idx + 1:<10} {player:<20} {round(rating, 2):<10} {win_rate:<11.2f} {player_stats['games']:<6} "
+                f"{idx + 1:<5} {player:<20} {round(rating, 2):<10} {win_rate:<11.2f} {player_stats['games']:<6} "
                 f"{player_stats['wins']:<5} {player_stats['losses']:<7}"
             )
 
