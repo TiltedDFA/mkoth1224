@@ -41,18 +41,22 @@ class EloSystem:
         expected1 = self.expected_score(rating1_before, rating2_before)
         expected2 = self.expected_score(rating2_before, rating1_before)
 
+        is_epic = score1 == 0 or score2 == 0
         # Determine actual results
         if score1 > score2:
             actual1, actual2 = 1, 0
         elif score2 > score1:
-            actual1, actual2 = 0, 1
+            actual2, actual1 = 1, 0
         else:
             actual1, actual2 = 0.5, 0.5
 
         # Update ratings
-        rating1_after = rating1_before + self.k_factor * (actual1 - expected1)
-        rating2_after = rating2_before + self.k_factor * (actual2 - expected2)
-
+        if is_epic:
+            rating1_after = rating1_before + (self.k_factor * 1.33) * (actual1 - expected1)
+            rating2_after = rating2_before + (self.k_factor * 1.33) * (actual2 - expected2)
+        else:
+            rating1_after = rating1_before + self.k_factor * (actual1 - expected1)
+            rating2_after = rating2_before + self.k_factor * (actual2 - expected2)
         # Save updated ratings
         self.players[player1] = rating1_after
         self.players[player2] = rating2_after
