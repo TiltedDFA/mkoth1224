@@ -1,3 +1,6 @@
+import os
+import subprocess as sp
+
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -8,8 +11,25 @@ from my_token import *
 # Load bot token from .env file
 load_dotenv()
 
+script_dir = os.path.dirname(os.path.abspath(__file__))
 
+def git_pull():
+    try:
+        os.chdir(script_dir)
+        sp.check_call(["git","pull"])
+        print("Pulled changes")
+    except sp.CalledProcessError as e:
+        print(f"Error pulling changes {e}")
 
+def git_push():
+    try:
+        os.chdir(script_dir)
+        sp.check_call(["git","add", "."])
+        sp.check_call(["git", "commit", "-m", "'auto commit by script'"])
+        sp.check_call(["git", "push"])
+        print("Pushed changes")
+    except sp.CalledProcessError as e:
+        print(f"Error pushing changes {e}")
 # Initialize Elo system
 elo_system = EloSystem()
 
@@ -18,6 +38,14 @@ intents = discord.Intents.default()
 intents.messages = True  # Allow the bot to read messages
 intents.message_content = True  # Allow access to message content
 bot = commands.Bot(command_prefix=">.", intents=intents)
+# List of authorized user IDs
+AUTHORIZED_USER_IDS = [317019865242140683,]  # Replace with actual IDs
+
+def is_owner():
+    """Custom check to restrict commands to specific user IDs."""
+    def predicate(ctx):
+        return ctx.author.id in AUTHORIZED_USER_IDS
+    return commands.check(predicate)
 
 @bot.event
 async def on_ready():
@@ -82,5 +110,13 @@ async def leaderboardfull(ctx):
         message += f"{i:<3} {player:<15} {round(rating, 2):<7}\n"
     message += "```"
     await ctx.send(message)
+@bot.command(name="ghubpush")
+@is_owner()
+async def ghub_push(ctx):
+    git_push()
+@bot.command(name="ghubpull")
+@is_owner()
+async def ghub_pull(ctx):
+    git_pull()
 # Run the bot
 bot.run(TOKEN)
