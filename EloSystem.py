@@ -52,7 +52,7 @@ class EloSystem:
         ret += f"player two change: {elo_two} => {rating2_after :5.2f}"
         return ret
 
-    def update_ratings(self, player1, player2, score1, score2):
+    def update_ratings(self, player1, player2, score1, score2) -> str:
         """Update the Elo ratings based on match scores."""
         self.add_player(player1)
         self.add_player(player2)
@@ -90,6 +90,7 @@ class EloSystem:
 
         # Save match history
         self.save_match_history(player1, player2, score1, score2, rating1_before, rating1_after, rating2_before, rating2_after)
+        return f"{player1}: {rating1_before} => {rating1_after}\n{player2}: {rating2_before} => {rating2_after}"
 
     def save_match_history(self, player1, player2, score1, score2, rating1_before, rating1_after, rating2_before, rating2_after):
         """Save a single match record to the history CSV file."""

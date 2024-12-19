@@ -29,8 +29,9 @@ async def record_match(ctx, player1: str, player2: str, score1: int, score2: int
     """Record a match between two players."""
     player1 = player1.strip().lower()
     player2 = player2.strip().lower()
-    elo_system.update_ratings(player1, player2, score1, score2)
-    await ctx.send(f"Match recorded: {player1} ({score1}) vs {player2} ({score2}). Elo ratings updated!")
+    change_str = elo_system.update_ratings(player1, player2, score1, score2)
+    elo_system.save_data()
+    await ctx.send(f"```Match recorded\n" + change_str + "```")
 
 @bot.command(name="howmuchelo")
 async def how_much_elo(ctx, elo1: float, elo2: float, score1 : int, score2: int):
@@ -80,7 +81,7 @@ async def leaderboardfull(ctx):
     leaderboard = sorted(elo_system.players.items(), key=lambda x: x[1], reverse=True)
     message = "Leaderboard:\n```"
     for i, (player, rating) in enumerate(leaderboard, start=1):
-        message += f"{i}. {player}: {round(rating, 2)}\n"
+        message += f"{i:<3} {player:<15} {round(rating, 2):<7}\n"
     message += "```"
     await ctx.send(message)
 # Run the bot
