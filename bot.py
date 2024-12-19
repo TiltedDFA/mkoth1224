@@ -27,12 +27,15 @@ async def on_ready():
 @commands.has_role("Overlord Tilt")
 async def record_match(ctx, player1: str, player2: str, score1: int, score2: int):
     """Record a match between two players."""
+    player1 = player1.strip().lower()
+    player2 = player2.strip().lower()
     elo_system.update_ratings(player1, player2, score1, score2)
     await ctx.send(f"Match recorded: {player1} ({score1}) vs {player2} ({score2}). Elo ratings updated!")
 
 @bot.command(name="howmuchelo")
 async def how_much_elo(ctx, elo1: float, elo2: float, score1 : int, score2: int):
-    await ctx.send(EloSystem.str_elo_change(elo1, elo2, score1, score2))
+    await ctx.send("```" + EloSystem.str_elo_change(elo1, elo2, score1, score2) + "```")
+
 @bot.command(name="stats")
 async def player_stats(ctx, player: str):
     """Display stats for a specific player."""
@@ -50,33 +53,35 @@ async def player_stats(ctx, player: str):
     win_rate = (wins / games * 100) if games > 0 else 0.0
 
     await ctx.send(
-        f"Stats for {player}:\n"
+        f"```Stats for {player}:\n"
         f"- Elo Rating: {rating}\n"
         f"- Games Played: {games}\n"
         f"- Wins: {wins}\n"
         f"- Losses: {losses}\n"
         f"- Draws: {draws}\n"
-        f"- Win Rate: {win_rate:.2f}%"
+        f"- Win Rate: {win_rate:.2f}%```"
     )
 
 @bot.command(name="leaderboard")
 async def leaderboard(ctx):
     """Display the leaderboard of players by Elo rating."""
     leaderboard = sorted(elo_system.players.items(), key=lambda x: x[1], reverse=True)
-    message = "Leaderboard:\n"
+    message = "Leaderboard:\n```"
     for i, (player, rating) in enumerate(leaderboard, start=1):
         if(i > 10): break
         message += f"{i}. {player}: {round(rating, 2)}\n"
+    message += "```"
     await ctx.send(message)
 
 @bot.command(name="leaderboardfull")
 @commands.has_permissions(administrator=True)
-async def leaderboard(ctx):
+async def leaderboardfull(ctx):
     """Display the leaderboard of players by Elo rating."""
     leaderboard = sorted(elo_system.players.items(), key=lambda x: x[1], reverse=True)
-    message = "Leaderboard:\n"
+    message = "Leaderboard:\n```"
     for i, (player, rating) in enumerate(leaderboard, start=1):
         message += f"{i}. {player}: {round(rating, 2)}\n"
+    message += "```"
     await ctx.send(message)
 # Run the bot
 bot.run(TOKEN)

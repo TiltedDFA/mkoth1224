@@ -61,8 +61,8 @@ class EloSystem:
         rating1_before = self.players[player1]
         rating2_before = self.players[player2]
 
-        expected1 = self.expected_score(rating1_before, rating2_before)
-        expected2 = self.expected_score(rating2_before, rating1_before)
+        expected1 = EloSystem.expected_score(rating1_before, rating2_before)
+        expected2 = EloSystem.expected_score(rating2_before, rating1_before)
 
         is_epic = score1 == 0 or score2 == 0
         # Determine actual results
@@ -189,3 +189,21 @@ class EloSystem:
                 f"{idx + 1:<5} {player:<20} {round(rating, 2):<10} {win_rate:<11.2f} {player_stats['games']:<6} "
                 f"{player_stats['wins']:<5} {player_stats['losses']:<7}"
             )
+    def str_rating(self) -> str:
+        stats = self.calculate_stats_from_history()
+        ret = ""
+        # print("\nCurrent Elo Ratings and Stats:")
+        header = f"{'Rank':<5} {'Player':<20} {'Rating':<10} {'Win %':<12}{'Games':<6} {'Wins':<5} {'Losses':<7}"
+        ret += "Current Elo Ratings and Stats:\n"
+        ret += header + "\n"
+        ret += "-" * len(header)
+        for idx, (player, rating) in enumerate(sorted(self.players.items(), key=lambda x: x[1], reverse=True)):  # Sort alphabetically
+            player_stats = stats[player]
+            games = player_stats['games']
+            wins = player_stats['wins']
+            win_rate = (wins / games * 100) if games > 0 else 0.0
+            ret += (
+                f"{idx + 1:<5} {player:<20} {round(rating, 2):<10} {win_rate:<11.2f} {player_stats['games']:<6} "
+                f"{player_stats['wins']:<5} {player_stats['losses']:<7}\n"
+            )
+        return ret
