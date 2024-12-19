@@ -115,10 +115,12 @@ async def leaderboardfull(ctx):
 @is_owner()
 async def ghub_push(ctx):
     git_push()
+    await ctx.send("```Databased pushed upstream```")
 
 @bot.command(name="ghubpull")
 @is_owner()
 async def ghub_pull(ctx):
     git_pull()
+    await ctx.send("```Pulled from upstream```")
 # Run the bot
 bot.run(TOKEN)
