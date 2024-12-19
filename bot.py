@@ -110,10 +110,12 @@ async def leaderboardfull(ctx):
         message += f"{i:<3} {player:<15} {round(rating, 2):<7}\n"
     message += "```"
     await ctx.send(message)
+
 @bot.command(name="ghubpush")
 @is_owner()
 async def ghub_push(ctx):
     git_push()
+
 @bot.command(name="ghubpull")
 @is_owner()
 async def ghub_pull(ctx):
