@@ -50,7 +50,6 @@ async def player_stats(ctx, player: str):
     games = player_stats["games"]
     wins = player_stats["wins"]
     losses = player_stats["losses"]
-    draws = player_stats["draws"]
     win_rate = (wins / games * 100) if games > 0 else 0.0
 
     await ctx.send(
@@ -59,7 +58,6 @@ async def player_stats(ctx, player: str):
         f"- Games Played: {games}\n"
         f"- Wins: {wins}\n"
         f"- Losses: {losses}\n"
-        f"- Draws: {draws}\n"
         f"- Win Rate: {win_rate:.2f}%```"
     )
 
