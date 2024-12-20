@@ -1,5 +1,6 @@
 import os
 import subprocess as sp
+import sys
 
 import discord
 from discord.ext import commands
@@ -118,6 +119,11 @@ async def leaderboardfull(ctx):
 async def ghub_push(ctx):
     git_push()
     await ctx.send("```Databased pushed upstream```")
+
+@bot.command(name="restart")
+@is_owner()
+async def restarttt(ctx):
+    os.execv(sys.executable, ['python'] + sys.argv)
 
 @bot.command(name="ghubpull")
 @is_owner()
