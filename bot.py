@@ -71,7 +71,7 @@ async def player_stats(ctx, player: str):
     stats = elo_system.calculate_stats_from_history()
     player = player.lower()
     if(player == "tilted"):
-        await ctx.send("```Stats for tilted\n- Elo Rating:999999999\n- Games Played: 69\n- Wins: 69\n- Losses: 0\n- Win Rate: 100%")
+        await ctx.send("```Stats for tilted\n- Elo Rating:999999999\n- Games Played: 69\n- Wins: 69\n- Losses: 0\n- Win Rate: 100%```")
         return
     if player not in elo_system.players:
         await ctx.send(f"No data found for player `{player}`.")
