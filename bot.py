@@ -3,13 +3,13 @@ import subprocess as sp
 
 import discord
 from discord.ext import commands
-from dotenv import load_dotenv
+
 
 from EloSystem import *
 from my_token import *
 
 # Load bot token from .env file
-load_dotenv()
+#load_dotenv()
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
