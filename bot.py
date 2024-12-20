@@ -4,7 +4,6 @@ import subprocess as sp
 import discord
 from discord.ext import commands
 
-
 from EloSystem import *
 from my_token import *
 
@@ -70,7 +69,7 @@ async def player_stats(ctx, player: str):
     """Display stats for a specific player."""
     stats = elo_system.calculate_stats_from_history()
     if player not in elo_system.players:
-        await ctx.send(f"No data found for player '{player}'.")
+        await ctx.send(f"No data found for player `{player}`.")
         return
 
     rating = round(elo_system.players[player], 2)
