@@ -68,10 +68,13 @@ async def how_much_elo(ctx, elo1: float, elo2: float, score1 : int, score2: int)
 async def player_stats(ctx, player: str):
     """Display stats for a specific player."""
     stats = elo_system.calculate_stats_from_history()
+    player = player.lower()
     if player not in elo_system.players:
         await ctx.send(f"No data found for player `{player}`.")
         return
-
+    if(player == "tilted"):
+        await ctx.send("```Stats for tilted\n- Elo Rating:999999999\n- Games Played: 69\n- Wins: 69\n- Losses: 0\n- Win Rate: 100%")
+        return
     rating = round(elo_system.players[player], 2)
     player_stats = stats[player]
     games = player_stats["games"]
